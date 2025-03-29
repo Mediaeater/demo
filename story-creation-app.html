@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Spark</title>
+    <style>
+        /* Modern, Clean CSS with episodic storytelling elements */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #2ecc71; /* Vibrant Green */
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        select {
+            appearance: none;
+            background-image: url('data:image/svg+xml;charset=UTF-8,<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+        }
+
+        button {
+            background-color: #2ecc71; /* Vibrant Green */
+            color: #fff;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.2s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .suggestion {
+            background-color: #e8f6ef;
+            padding: 12px;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 1em;
+            color: #325e45;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 6px;
+            height: 24px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background-color: #2ecc71;
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Transition effect */
+        .page-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(46, 204, 113, 0.7);
+            animation: pageSpin 1s ease-in-out;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        @keyframes pageSpin {
+            0% { opacity: 0; }
+            50% { opacity: 0.7; }
+            100% { opacity: 0; }
+        }
+
+        /* Sound effect visual */
+        .sound-effect {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 80px;
+            font-weight: bold;
+            color: #2ecc71;
+            text-shadow: 3px 3px 0 #333;
+            animation: popIn 0.5s ease-out;
+            z-index: 1001;
+            pointer-events: none;
+            font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+        }
+
+        @keyframes popIn {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+
+        /* Cliffhanger styling */
+        .cliffhanger {
+            background-color: #ffeaa7;
+            color: #6d5710;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-style: italic;
+            border-left: 5px solid #fdcb6e;
+            text-align: center;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Narrator box */
+        .narrator {
+            background-color: #e8f6ef;
+            border: 2px solid #2ecc71;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 4px;
+            color: #27ae60;
+            font-style: italic;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Story Helper Button and Panel */
+        #story-helper-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            z-index: 100;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #story-helper-button:hover {
+            background-color: #2980b9;
+        }
+
+        #story-helper-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100%;
+            background-color: #fff;
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 101;
+            overflow-y: auto;
+            color: #333;
+            border-left: 2px solid #3498db;
+        }
+
+        #story-helper-panel.open {
+            transform: translateX(0);
+        }
+
+        #story-helper-panel h3 {
+            color: #3498db;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        #story-helper-panel button {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f5f5f5;
+            color: #333;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        #story-helper-panel button:hover {
+            background-color: #e9e9e9;
+        }
+
+        #close-helper-panel {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #3498db;
+            cursor: pointer;
+        }
+
+        /* Storyboard Area */
+        #storyboard-area {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px dashed #2ecc71;
+            border-radius: 8px;
+            text-align: center;
+            color: #666;
+            background-color: #f9f9f9;
+        }
+
+        /* Horizontal Navigation */
+        .horizontal-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .horizontal-nav button {
+            background-color: #f5f5f5;
+            color: #666;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .horizontal-nav button:hover {
+            background-color: #e0e0e0;
+        }
+
+        .horizontal-nav button.active {
+            background-color: #2ecc71;
+            color: #fff;
+        }
+
+        /* Timer element */
+        .timer {
+            text-align: center;
+            font-size: 20px;
+            color: #e74c3c;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        /* Villain character renamed to "Challenge" */
+        .challenge {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        .challenge-icon {
+            width: 50px;
+            height: 50px;
+            background-color: #ff7675;
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .challenge-text {
+            flex: 1;
+        }
+
+        .challenge-name {
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 5px;
+        }
+
+        /* Tool belt */
+        .tool-belt {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .tool-belt button {
+            padding: 8px 12px;
+            font-size: 14px;
+            background-color: #3498db;
+        }
+
+        /* Episode title */
+        .episode-title {
+            text-align: center;
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Story Spark</h1>
+
+        <div id="welcome-section">
+            <div class="episode-title">EPISODE 1: THE BEGINNING</div>
+            <h2>Let's Get Started!</h2>
+            <div class="narrator">Welcome to Story Spark! Choose your story genre and target audience to begin your adventure!</div>
+            
+            <div class="form-group">
+                <label for="genre">Genre:</label>
+                <select id="genre">
+                    <option value="fantasy">Fantasy</option>
+                    <option value="sci-fi">Sci-Fi</option>
+                    <option value="mystery">Mystery</option>
+                    <option value="romance">Romance</option>
+                    <option value="thriller">Thriller</option>
+                    <option value="horror">Horror</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="targetAudience">Target Audience:</label>
+                <select id="targetAudience">
+                    <option value="young-adult">Young Adult</option>
+                    <option value="adult">Adult</option>
+                    <option value="children">Children</option>
+                    <option value="all-ages">All Ages</option>
+                </select>
+            </div>
+            <button onclick="startStoryCreation()">Begin Story Creation!</button>
+        </div>
+
+        <div id="progress-bar" class="progress-bar hidden">
+            <div class="progress-bar-fill" id="progress-bar-fill"></div>
+        </div>
+
+        <div class="timer hidden" id="episode-timer">
+            Time Remaining: <span id="timer-value">5:00</span>
+        </div>
+
+        <div class="horizontal-nav hidden" id="question-nav">
+            <button class="question-button" onclick="showQuestion(1)" data-question="1">Character</button>
+            <button class="question-button" onclick="showQuestion(2)" data-question="2">Goal</button>
+            <button class="question-button" onclick="showQuestion(3)" data-question="3">Setting</button>
+            <button class="question-button" onclick="showQuestion(4)" data-question="4">Time Period</button>
+            <button class="question-button" onclick="showQuestion(5)" data-question="5">Theme</button>
+        </div>
+
+        <!-- Question 1: Characters -->
+        <div id="question1" class="hidden">
+            <div class="episode-title">EPISODE 1: THE HERO RISES</div>
+            
+            <div class="challenge">
+                <div class="challenge-icon">FB</div>
+                <div class="challenge-text">
+                    <div class="challenge-name">Flat Character Challenge</div>
+                    <div>This challenge threatens to make all your characters boring and forgettable! Defeat it by creating a character with depth and motivation!</div>
+                </div>
+            </div>
+            
+            <div class="narrator">Your story needs a compelling protagonist! Create a character that readers will connect with and root for!</div>
+            
+            <h2>Character Creation</h2>
+            
+            <div class="tool-belt">
+                <button onclick="useCharacterTool('archetype')">Character Archetypes</button>
+                <button onclick="useCharacterTool('traits')">Personality Traits</button>
+                <button onclick="useCharacterTool('backstory')">Backstory Generator</button>
+            </div>
+            
+            <div class="form-group">
+                <label for="characterName">Character Name:</label>
+                <input type="text" id="characterName" name="characterName">
+            </div>
+            <div class="form-group">
+                <label for="characterDescription">Character Description:</label>
+                <textarea id="characterDescription" name="characterDescription"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="characterMotivation">Character Motivation:</label>
+                <input type="text" id="characterMotivation" name="characterMotivation">
+            </div>
+            <div class="form-group">
+                <label for="characterWeakness">Character Weakness:</label>
+                <input type="text" id="characterWeakness" name="characterWeakness">
+            </div>
+            <div class="suggestion">
+                <strong>Storytelling Theory:</strong> Consider using "The Hero's Journey" structure from your framework. Position your character as the hero of their own story with a clear motivation and weakness to overcome.
+            </div>
+            <button onclick="completeQuestion(1)">Save Character</button>
+            
+            <div class="cliffhanger hidden" id="cliffhanger1">
+                Our hero has been created, but what challenges will they face? What goals will drive them forward? Stay tuned for the next episode to find out!
+            </div>
+        </div>
+
+        <!-- Question 2: Goal/Desire -->
+        <div id="question2" class="hidden">
+            <div class="episode-title">EPISODE 2: THE GOAL QUEST</div>
+            
+            <div class="challenge">
+                <div class="challenge-icon">PV</div>
+                <div class="challenge-text">
+                    <div class="challenge-name">The Purpose Void</div>
+                    <div>This challenge is trying to make your character aimless and unmotivated! Create a powerful goal to defeat this story problem!</div>
+                </div>
+            </div>
+            
+            <div class="narrator">Your hero needs a purpose - a goal to drive the story forward and create tension!</div>
+            
+            <h2>Goal/Desire Creation</h2>
+            
+            <div class="tool-belt">
+                <button onclick="useGoalTool('desire')">Internal Desires</button>
+                <button onclick="useGoalTool('external')">External Goals</button>
+                <button onclick="useGoalTool('stakes')">Raising Stakes</button>
+            </div>
+            
+            <div class="form-group">
+                <label for="goal">What does your character want more than anything?</label>
+                <input type="text" id="goal" name="goal">
+            </div>
+            <div class="form-group">
+                <label for="obstacle">What stands in their way?</label>
+                <input type="text" id="obstacle" name="obstacle">
+            </div>
+            <div class="form-group">
+                <label for="stakes">What happens if they fail?</label>
+                <input type="text" id="stakes" name="stakes">
+            </div>
+            <div class="suggestion">
+                <strong>Storytelling Theory:</strong> Apply the "Tension-Relief Theory" from your framework. Build tension through meaningful obstacles and high stakes that will create emotional investment.
+            </div>
+            <button onclick="completeQuestion(2)">Save Goal</button>
+            
+            <div class="cliffhanger hidden" id="cliffhanger2">
+                Your hero now has a powerful goal, but where will this adventure take place? What world awaits them? Find out in the next exciting episode!
+            </div>
+        </div>
+
+        <!-- Question 3: Setting -->
+        <div id="question3" class="hidden">
+            <div class="episode-title">EPISODE 3: THE WORLD AWAITS</div>
+            
+            <div class="challenge">
+                <div class="challenge-icon">BW</div>
+                <div class="challenge-text">
+                    <div class="challenge-name">The Bland World Problem</div>
+                    <div>This challenge wants to make your setting forgettable and generic! Create a vivid and unique world to give your story a rich foundation!</div>
+                </div>
+            </div>
+            
+            <div class="narrator">Every great story needs a compelling setting! Create a world that will engage readers and transport them to another reality!</div>
+            
+            <h2>Setting Creation</h2>
+            
+            <div class="tool-belt">
+                <button onclick="useSettingTool('location')">Unique Locations</button>
+                <button onclick="useSettingTool('atmosphere')">Atmosphere Builder</button>
+                <button onclick="useSettingTool('rules')">World Rules</button>
+            </div>
+            
+            <div class="form-group">
+                <label for="settingLocation">Primary Location:</label>
+                <input type="text" id="settingLocation" name="settingLocation">
+            </div>
+            <div class="form-group">
+                <label for="settingDescription">Description (sights, sounds, smells):</label>
+                <textarea id="settingDescription" name="settingDescription"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="settingRules">Special Rules or Properties of this World:</label>
+                <input type="text" id="settingRules" name="settingRules">
+            </div>
+            <div class="suggestion">
+                <strong>Storytelling Theory:</strong> Consider using "Dramatic Demonstration" from your framework. Your setting should visually demonstrate the central conflicts and themes of your story.
+            </div>
+            <button onclick="completeQuestion(3)">Save Setting</button>
+            
+            <div class="cliffhanger hidden" id="cliffhanger3">
+                The world has been built, but when does our story take place? What era will provide the backdrop for our hero's journey? The answer lies in our next episode!
+            </div>
+        </div>
+
+        <!-- Question 4: Time Period/Era -->
+        <div id="question4" class="hidden">
+            <div class="episode-title">EPISODE 4: THE TIME DIMENSION</div>
+            
+            <div class="challenge">
+                <div class="challenge-icon">TC</div>
+                <div class="challenge-text">
+                    <div class="challenge-name">The Time Confusion</div>
+                    <div>This challenge wants to disorient your readers by making your story's era unclear! Define a specific time period to ground your narrative!</div>
+                </div>
+            </div>
+            
+            <div class="narrator">We must establish when this epic tale takes place to ground our readers in the narrative!</div>
+            
+            <h2>Time Period/Era</h2>
+            
+            <div class="tool-belt">
+                <button onclick="useTimeTool('past')">Historical Eras</button>
+                <button onclick="useTimeTool('present')">Contemporary Settings</button>
+                <button onclick="useTimeTool('future')">Future Possibilities</button>
+            </div>
+            
+            <div class="form-group">
+                <label for="era">When does the story take place?</label>
+                <input type="text" id="era" name="era">
+            </div>
+            <div class="form-group">
+                <label for="timeTechnology">Technology or Tools of the Era:</label>
+                <input type="text" id="timeTechnology" name="timeTechnology">
+            </div>
+            <div class="form-group">
+                <label for="timeSignificance">Why is this time period significant for your story?</label>
+                <textarea id="timeSignificance" name="timeSignificance"></textarea>
+            </div>
+            <div class="suggestion">
+                <strong>Storytelling Theory:</strong> Apply the "Emotional Resonance" framework by using a time period that creates built-in tension or meaning for your character's journey.
+            </div>
+            <button onclick="completeQuestion(4)">Save Time Period</button>
+            
+            <div class="cliffhanger hidden" id="cliffhanger4">
+                The when has been established, but what deeper meaning does our story hold? What theme will resonate with readers long after they finish? Don't miss our exciting conclusion!
+            </div>
+        </div>
+
+        <!-- Question 5: Theme/Message -->
+        <div id="question5" class="hidden">
+            <div class="episode-title">EPISODE 5: THE MEANING MAKER</div>
+            
+            <div class="challenge">
+                <div class="challenge-icon">SP</div>
+                <div class="challenge-text">
+                    <div class="challenge-name">The Shallow Story Problem</div>
+                    <div>This challenge wants to rob your story of meaning and depth! Create a powerful theme to give your story lasting impact!</div>
+                </div>
+            </div>
+            
+            <div class="narrator">The final piece! We must establish the thematic heart of our story to complete our hero's journey!</div>
+            
+            <h2>Theme/Message</h2>
+            
+            <div class="tool-belt">
+                <button onclick="useThemeTool('universal')">Universal Themes</button>
+                <button onclick="useThemeTool('conflict')">Central Conflicts</button>
+                <button onclick="useThemeTool('message')">Message Builder</button>
+            </div>
+            
+            <div class="form-group">
+                <label for="themeCore">Core Theme:</label>
+                <input type="text" id="themeCore" name="themeCore">
+            </div>
+            <div class="form-group">
+                <label for="themeExploration">How will you explore this theme in your story?</label>
+                <textarea id="themeExploration" name="themeExploration"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="themeResolution">How does the theme resolve by the end?</label>
+                <input type="text" id="themeResolution" name="themeResolution">
+            </div>
+            <div class="suggestion">
+                <strong>Storytelling Theory:</strong> Consider the "Emotional Resolution" framework from your JSON. Create an emotional journey that resolves through your theme and gives readers satisfaction.
+            </div>
+            <button onclick="completeQuestion(5)">Save Theme</button>
+        </div>
+
+        <!-- Outline Section -->
+        <div id="outline-section" class="hidden">
+            <div class="episode-title">FINALE: THE STORY UNFOLDS</div>
+            
+            <div class="narrator">Congratulations, story creator! You've overcome all the challenges and crafted a compelling narrative framework! Behold your story outline!</div>
+            
+            <h2>Story Outline</h2>
+            <div id="outline-content">
+                <!-- Dynamically generated outline content goes here -->
+            </div>
+            
+            <div class="tool-belt">
+                <button onclick="editOutline()">Edit Outline</button>
+                <button onclick="saveOutline()">Save Outline</button>
+                <button onclick="shareOutline()">Share Outline</button>
+            </div>
+            
+            <!-- Display Storyboard -->
+            <h2>Storyboard</h2>
+            <div id="storyboard-area">
+                Your visual storyboard will appear here!
+            </div>
+        </div>
+
+        <!-- Story Helper Panel -->
+        <div id="story-helper-panel">
+            <button id="close-helper-panel">×</button>
+            <h3>Story Helper</h3>
+            <p>Need some help? Choose a topic below:</p>
+            <button onclick="askHelper('character')">Character Development</button>
+            <button onclick="askHelper('plot')">Plot Structure</button>
+            <button onclick="askHelper('setting')">Setting Ideas</button>
+            <button onclick="askHelper('theme')">Theme Exploration</button>
+            <button onclick="askHelper('conflict')">Conflict Creation</button>
+            <button onclick="askHelper('dialogue')">Dialogue Tips</button>
+        </div>
+
+    </div>
+    <button id="story-helper-button">Ask Story Helper</button>
+
+    <script>
+        // Global variables
+        let currentQuestion = 0;
+        let totalQuestions = 5;
+        let intervalId = null;
+        let timeRemaining = 300; // 5 minutes in seconds
+        let lastSavedQuestion = 0;
+        
+        // Function to start the story creation process
+        function startStoryCreation() {
+            showSoundEffect("GO!");
+            showPageTransition();
+            setTimeout(() => {
+                document.getElementById("welcome-section").classList.add("hidden");
+                document.getElementById("question1").classList.remove("hidden");
+                document.getElementById("progress-bar").classList.remove("hidden");
+                document.getElementById("question-nav").classList.remove("hidden");
+                document.getElementById("episode-timer").classList.remove("hidden");
+                
+                // Start the timer
+                startTimer();
+                
+                // Set current question
+                currentQuestion = 1;
+                updateProgressBar();
+                activateQuestionButton(1);
+            }, 1000);
+        }
+        
+        // Function to show transition effect
+        function showPageTransition() {
+            const transition = document.createElement('div');
+            transition.className = 'page-transition';
+            document.body.appendChild(transition);
+            
+            setTimeout(() => {
+                document.body.removeChild(transition);
+            }, 1000);
+        }
+        
+        // Function to show sound effect
+        function showSoundEffect(text) {
+            const effect = document.createElement('div');
+            effect.className = 'sound-effect';
+            effect.textContent = text;
+            document.body.appendChild(effect);
+            
+            setTimeout(() => {
+                document.body.removeChild(effect);
+            }, 1000);
+        }
+        
+        // Function to activate the current question button
+        function activateQuestionButton(questionNumber) {
+            const questionButtons = document.querySelectorAll('.question-button');
+            questionButtons.forEach(button => {
+                button.classList.remove('active');
+                if (button.dataset.question == questionNumber) {
+                    button.classList.add('active');
+                }
+            });
+        }
+        
+        // Function to show a specific question
+        function showQuestion(questionNumber) {
+            // Save current question data if needed
+            if (currentQuestion > 0) {
+                saveQuestionData(currentQuestion);
+            }
+            
+            // Hide current question
+            if (currentQuestion > 0) {
+                document.getElementById("question" + currentQuestion).classList.add("hidden");
+            }
+            
+            // Show page transition
+            showPageTransition();
+            
+            // Show sound effect based on question number
+            const effects = ["GO!", "WOW!", "BOOM!", "ZOOM!", "EPIC!"];
+            showSoundEffect(effects[(questionNumber - 1) % effects.length]);
+            
+            setTimeout(() => {
+                // Show the requested question
+                document.getElementById("question" + questionNumber).classList.remove("hidden");
+                
+                // Update current question
+                currentQuestion = questionNumber;
+                
+                // Update progress bar
+                updateProgressBar();
+                
+                // Activate the current question button
+                activateQuestionButton(questionNumber);
+            }, 1000);
+        }
+        
+        // Function to update the progress bar
+        function updateProgressBar() {
+            const progressPercentage = (currentQuestion / totalQuestions) * 100;
+            document.getElementById("progress-bar-fill").style.width = progressPercentage + "%";
+        }
+        
+        // Function to save question data
+        function saveQuestionData(questionNumber) {
+            // This function would normally save data to a storage mechanism
+            // For this demo, we're just setting a flag
+            lastSavedQuestion = questionNumber;
+        }
+        
+        // Function to complete a question and show cliffhanger
+        function completeQuestion(questionNumber) {
+            // Save the data
+            saveQuestionData(questionNumber);
+            
+            // Show cliffhanger if not the last question
+            if (questionNumber < totalQuestions) {
+                document.getElementById("cliffhanger" + questionNumber).classList.remove("hidden");
+                
+                // Auto-advance after a delay
+                setTimeout(() => {
+                    document.getElementById("cliffhanger" + questionNumber).classList.add("hidden");
+                    showQuestion(questionNumber + 1);
+                }, 3000);
+            } else {
+                // Show the outline for the final question
+                showOutline();
+            }
