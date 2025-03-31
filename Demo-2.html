@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Echoing Narrative Storytelling Tool</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a148c;
+            --secondary: #7b1fa2;
+            --light: #e1bee7;
+            --dark: #12005e;
+            --accent: #e040fb;
+            --text: #212121;
+            --bg: #f5f5f5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+
+        .sidebar {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+        }
+
+        .main-content {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(224, 64, 251, 0.2);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        button:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        button i {
+            margin-right: 8px;
+        }
+
+        .btn-secondary {
+            background-color: var(--light);
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background-color: #d1c4e9;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.9rem;
+        }
+
+        .stage-indicator {
+            display: flex;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        .stage {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            position: relative;
+            min-width: 120px;
+            cursor: pointer;
+        }
+
+        .stage:not(:last-child):after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            width: 20px;
+            height: 2px;
+            background-color: #ddd;
+            transform: translateY(-50%);
+        }
+
+        .stage-circle {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background-color: #ddd;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #777;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .stage.active .stage-circle {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 8px rgba(74, 20, 140, 0.3);
+        }
+
+        .stage.active .stage-name {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .stage-name {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--light);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-left-color: var(--accent);
+        }
+
+        .card-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+
+        .card-content {
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .character-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .character-card {
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .character-name {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .character-details {
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: var(--light);
+            color: var(--dark);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #777;
+        }
+
+        .empty-state i {
+            font-size: 2.5rem;
+            color: #ddd;
+            margin-bottom: 15px;
+        }
+
+        .theme-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .scene-idea {
+            background-color: #f8f1fc;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .scene-idea h3 {
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--dark);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+
+            .stage {
+                min-width: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Echoing Narrative Storytelling Tool</h1>
+            <p class="subtitle">Craft multi-perspective stories with cyclical themes and nested conflicts</p>
+        </header>
+
+        <div class="stage-indicator" id="stageIndicator">
+            <div class="stage active" data-stage="0">
+                <div class="stage-circle">1</div>
+                <div class="stage-name">The Shattering</div>
+            </div>
+            <div class="stage" data-stage="1">
+                <div class="stage-circle">2</div>
+                <div class="stage-name">Unveiling Layers</div>
+            </div>
+            <div class="stage" data-stage="2">
+                <div class="stage-circle">3</div>
+                <div class="stage-name">Spiral Deepens</div>
+            </div>
+            <div class="stage" data-stage="3">
+                <div class="stage-circle">4</div>
+                <div class="stage-name">Breaking Point</div>
+            </div>
+            <div class="stage" data-stage="4">
+                <div class="stage-circle">5</div>
+                <div class="stage-name">Echoes of Fall</div>
+            </div>
+            <div class="stage" data-stage="5">
+                <div class="stage-circle">6</div>
+                <div class="stage-name">Circle Closes</div>
+            </div>
+        </div>
+
+        <div class="app-container">
+            <div class="sidebar">
+                <div class="section-title">
+                    <i class="fas fa-cog"></i> Story Elements
+                </div>
+
+                <div class="tabs">
+                    <div class="tab active" data-tab="core">Core</div>
+                    <div class="tab" data-tab="characters">Characters</div>
+                    <div class="tab" data-tab="loops">Nested Loops</div>
+                    <div class="tab" data-tab="themes">Themes</div>
+                </div>
+
+                <div class="tab-content active" id="core-tab">
+                    <div class="form-group">
+                        <label for="coreEvent">Core Event (The Shattering):</label>
+                        <textarea id="coreEvent" placeholder="Describe the pivotal event that shatters the status quo..."></textarea>
+                        <button id="saveCoreEvent" class="btn-small"><i class="fas fa-save"></i> Save</button>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="characters-tab">
+                    <div class="form-group">
+                        <label for="characterName">Character Name:</label>
+                        <input type="text" id="characterName" placeholder="Enter character name">
+                        
+                        <label for="initialBelief">Initial Belief:</label>
+                        <textarea id="initialBelief" placeholder="Character's initial belief about the core event"></textarea>
+                        
+                        <label for="initialFeeling">Initial Feeling:</label>
+                        <textarea id="initialFeeling" placeholder="Character's initial emotional response to the event"></textarea>
+                        
+                        <button id="addCharacter"><i class="fas fa-user-plus"></i> Add Character</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="selectCharacter">Add Event to Character:</label>
+                        <select id="selectCharacter">
+                            <option value="">Select a character</option>
+                        </select>
+                        
+                        <label for="characterEvent">Event Description:</label>
+                        <textarea id="characterEvent" placeholder="Describe an event from this character's perspective"></textarea>
+                        
+                        <label for="eventFeeling">Feeling About Event:</label>
+                        <input type="text" id="eventFeeling" placeholder="How did they feel?">
+                        
+                        <label for="beliefChange">Belief Change:</label>
+                        <input type="text" id="beliefChange" placeholder="How did their belief change?">
+                        
+                        <button id="addCharacterEvent"><i class="fas fa-plus-circle"></i> Add Event</button>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="loops-tab">
+                    <div class="form-group">
+                        <label for="loopDescription">Loop Description:</label>
+                        <textarea id="loopDescription" placeholder="Describe a nested loop (smaller crisis echoing the core event)"></textarea>
+                        
+                        <label for="loopCharacters">Related Characters (optional):</label>
+                        <select id="loopCharacters" multiple>
+                            <option value="">Select characters (hold Ctrl to select multiple)</option>
+                        </select>
+                        
+                        <button id="addLoop"><i class="fas fa-plus-circle"></i> Add Nested Loop</button>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="themes-tab">
+                    <div class="form-group">
+                        <label for="themeInput">Add Theme:</label>
+                        <input type="text" id="themeInput" placeholder="Enter a theme for your story">
+                        <button id="addTheme"><i class="fas fa-plus"></i> Add Theme</button>
+                    </div>
+                    
+                    <button id="suggestThemes" class="btn-secondary"><i class="fas fa-lightbulb"></i> Suggest Themes</button>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="section-title">
+                    <i class="fas fa-lightbulb"></i> Story Development
+                </div>
+
+                <div class="tabs">
+                    <div class="tab active" data-tab="scenes">Scene Ideas</div>
+                    <div class="tab" data-tab="story">Story Outline</div>
+                    <div class="tab" data-tab="analysis">Narrative Analysis</div>
+                </div>
+
+                <div class="tab-content active" id="scenes-tab">
+                    <div class="form-group">
+                        <label for="stageSelect">Generate Scene for Stage:</label>
+                        <select id="stageSelect">
+                            <option value="1">1. The Shattering</option>
+                            <option value="2">2. Unveiling Layers</option>
+                            <option value="3">3. Spiral Deepens</option>
+                            <option value="4">4. Breaking Point</option>
+                            <option value="5">5. Echoes of Fall</option>
+                            <option value="6">6. Circle Closes</option>
+                        </select>
+                        <button id="generateScene"><i class="fas fa-magic"></i> Generate Scene Idea</button>
+                    </div>
+                    
+                    <div id="sceneIdeasContainer">
+                        <div class="empty-state">
+                            <i class="fas fa-book-open"></i>
+                            <h3>No Scene Ideas Generated Yet</h3>
+                            <p>Generate scene ideas based on your story elements for each narrative stage.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="story-tab">
+                    <div class="empty-state">
+                        <i class="fas fa-list-ol"></i>
+                        <h3>Story Outline</h3>
+                        <p>As you develop your story elements, a detailed outline will appear here showing the progression through all six stages.</p>
+                    </div>
+                    <div id="storyOutline"></div>
+                </div>
+
+                <div class="tab-content" id="analysis-tab">
+                    <div id="characterPerspectives">
+                        <h3>Character Perspectives</h3>
+                        <div id="characterPerspectivesList" class="empty-state">
+                            <i class="fas fa-users"></i>
+                            <p>No character perspectives yet. Add characters to see their development.</p>
+                        </div>
+                    </div>
+                    
+                    <div id="themeAnalysis">
+                        <h3>Thematic Connections</h3>
+                        <div id="themeConnections" class="empty-state">
+                            <i class="fas fa-link"></i>
+                            <p>No thematic analysis yet. Add themes to see connections.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class EchoingNarrativeAI {
+            constructor() {
+                this.core_event = null;
+                this.perspectives = {};
+                this.nested_loops = [];
+                this.current_stage = 0;
+                this.stages = [
+                    "The Shattering",
+                    "Unveiling the Layers",
+                    "The Spiral Deepens",
+                    "The Breaking Point",
+                    "Echoes of the Fall",
+                    "The Circle Closes"
+                ];
+                this.themes = [];
+            }
+
+            setCoreEvent(event_description) {
+                this.core_event = event_description;
+                return `Core Event (The Shattering) set: ${this.core_event}`;
+            }
+
+            addTheme(theme) {
+                this.themes.push(theme);
+                return `Added theme: ${theme}`;
+            }
+
+            addPerspective(character_name, initial_belief = "", initial_feeling = "") {
+                if (character_name && !this.perspectives[character_name]) {
+                    this.perspectives[character_name] = {
+                        events: [],
+                        feelings: [initial_feeling],
+                        beliefs: [initial_belief]
+                    };
+                    return `Added perspective for: ${character_name}`;
+                } else if (!character_name) {
+                    return "Error: Character name cannot be empty.";
+                } else {
+                    return `Perspective for ${character_name} already exists.`;
+                }
+            }
+
+            addEventToPerspective(character_name, event_description, feeling = "", belief_change = "") {
+                if (character_name && this.perspectives[character_name]) {
+                    if (!event_description) return "Error: Event description cannot be empty.";
+                    
+                    this.perspectives[character_name].events.push(event_description);
+                    this.perspectives[character_name].feelings.push(feeling);
+                    this.perspectives[character_name].beliefs.push(belief_change);
+                    return `Added event to ${character_name}'s perspective: ${event_description}`;
+                } else if (!character_name) {
+                    return "Error: Character name cannot be empty.";
+                } else {
+                    return `Error: Character ${character_name} not found.`;
+                }
+            }
+
+            addNestedLoop(loop_description, related_characters = []) {
+                if (!loop_description) return "Error: Loop description cannot be empty.";
+                
+                const new_loop = {
+                    description: loop_description,
+                    characters: related_characters
+                };
+                this.nested_loops.push(new_loop);
+                return `Added nested loop: ${loop_description}`;
+            }
+
+            generateSceneIdea(stage_number) {
+                if (!this.core_event && stage_number > 1) {
+                    return "Please set a Core Event first before generating scene ideas for later stages.";
+                }
+
+                if (stage_number < 1 || stage_number > 6) {
+                    return "Invalid stage number. Please choose between 1-6.";
+                }
+
+                stage_number -= 1; // Convert to 0-based index
+                const stage_name = this.stages[stage_number];
+
+                if (stage_name === "The Shattering") {
+                    return this.core_event 
+                        ? `Scene Idea: Begin *in medias res* with the core event: "${this.core_event}". Focus on the immediate chaos and confusion. Show, don't tell, the initial impact.` 
+                        : "Scene Idea: Start with a dramatic, life-changing event that shatters the normal world of your characters. This is your core event - establish it with vivid sensory details.";
+                }
+
+                if (stage_name === "Unveiling the Layers") {
+                    const chars = Object.keys(this.perspectives);
+                    if (chars.length < 1) {
+                        return "Scene Idea: Introduce at least two characters with differing perspectives on the core event. Perhaps a witness and someone accused.";
+                    } else if (chars.length === 1) {
+                        return `Scene Idea: Show ${chars[0]} reflecting on the core event. Introduce a second character who challenges their perspective. Use dialog with conflicting details.`;
+                    } else {
+                        // Randomly select 2 characters
+                        const char1 = chars[Math.floor(Math.random() * chars.length)];
+                        let char2 = char1;
+                        while (char2 === char1) {
+                            char2 = chars[Math.floor(Math.random() * chars.length)];
+                        }
+                        return `Scene Idea: A fragmented conversation between ${char1} and ${char2} where they discuss the core event, revealing conflicting details and initial biases. Could be dialog or contrasting internal monologues.`;
+                    }
+                }
+
+                if (stage_name === "The Spiral Deepens") {
+                    if (this.nested_loops.length === 0) {
+                        const chars = Object.keys(this.perspectives);
+                        if (chars.length > 0) {
+                            const randomChar = chars[Math.floor(Math.random() * chars.length)];
+                            return `Scene Idea: Develop a smaller crisis related to the core event involving ${randomChar}. This could be a personal conflict, discovery, or decision that mirrors the larger event.`;
+                        } else {
+                            return "Scene Idea: Develop a smaller crisis that directly relates to the core event. Consider how this minor event mirrors or amplifies the themes.";
+                        }
+                    } else {
+                        const randomLoop = this.nested_loops[Math.floor(Math.random() * this.nested_loops.length)];
+                        const chars = randomLoop.characters.length > 0 
+                            ? randomLoop.characters.join(", ") 
+                            : Object.keys(this.perspectives).length > 0 
+                                ? Object.keys(this.perspectives)[0] 
+                                : "your protagonist";
+                        return `Scene Idea: ${randomLoop.description}. Focus on the escalating tension and the impact on ${chars}. How does this event make them question their beliefs?`;
+                    }
+                }
+
+                if (stage_name === "The Breaking Point") {
+                    const chars = Object.keys(this.perspectives);
+                    if (chars.length === 0) {
+                        return "Scene Idea: The culmination of all previous events. Show the direct consequence of the core event and nested loops. A high-stakes confrontation or revelation.";
+                    } else {
+                        const randomChar = chars[Math.floor(Math.random() * chars.length)];
+                        return `Scene Idea: The climax where all conflicts come to a head. ${randomChar} faces their ultimate test - a major decision or irreversible action that will determine their path forward.`;
+                    }
+                }
+
+                if (stage_name === "Echoes of the Fall") {
+                    const chars = Object.keys(this.perspectives);
+                    if (chars.length < 2) {
+                        return "Scene Idea: Explore the immediate aftermath of the climax. Focus on the emotional and practical consequences for those involved.";
+                    } else {
+                        const char1 = chars[Math.floor(Math.random() * chars.length)];
+                        let char2 = char1;
+                        while (char2 === char1 && chars.length > 1) {
+                            char2 = chars[Math.floor(Math.random() * chars.length)];
+                        }
+                        return `Scene Idea: Show ${char1} and ${char2} reacting differently to the climax. Their perspectives should have shifted significantly from the beginning. Use contrasting details to highlight changes.`;
+                    }
+                }
+
+                if (stage_name === "The Circle Closes") {
+                    return this.core_event 
+                        ? `Scene Idea: Return to a situation similar to the beginning, but with transformed understanding of "${this.core_event}". Show irreversible changes. Leave a lingering question about one of your themes.` 
+                        : "Scene Idea: The final scene should echo elements from the beginning, but show how everything has changed. Leave the reader with a thematic question to ponder.";
+                }
+
+                return "No scene idea available for this stage yet.";
+            }
+
+            advanceStage() {
+                this.current_stage = (this.current_stage + 1) % 6;
+                return `Advanced to stage: ${this.stages[this.current_stage]}`;
+            }
+
+            getCharacterPerspective(character_name) {
+                if (!character_name) return "Error: Character name cannot be empty.";
+                if (this.perspectives[character_name]) {
+                    return this.perspectives[character_name];
+                } else {
+                    return `Character '${character_name}' not found.`;
+                }
+            }
+
+            suggestThemes() {
+                if (!this.core_event) {
+                    return "No core event set. Cannot suggest themes.";
+                }
+
+                const potential_themes = new Set();
+                
+                // Add user-defined themes
+                this.themes.forEach(theme => potential_themes.add(theme));
+
+                // Basic theme suggestions based on keywords
+                if (this.core_event.toLowerCase().includes("loss")) {
+                    potential_themes.add("Grief and Loss");
+                }
+                if (this.core_event.toLowerCase().includes("betray")) {
+                    potential_themes.add("Betrayal and Trust");
+                }
+                if (this.core_event.toLowerCase().includes("discover")) {
+                    potential_themes.add("Discovery and Revelation");
+                }
+                if (this.core_event.toLowerCase().includes("secret")) {
+                    potential_themes.add("Truth and Deception");
+                }
+                if (this.core_event.toLowerCase().includes("death")) {
+                    potential_themes.add("Mortality");
+                }
+                if (this.core_event.toLowerCase().includes("power")) {
+                    potential_themes.add("Power and Corruption");
+                }
+                if (this.core_event.toLowerCase().includes("justice")) {
+                    potential_themes.add("Justice and Injustice");
+                }
+                if (this.core_event.toLowerCase().includes("love")) {
+                    potential_themes.add("Love and Sacrifice");
+                }
+                
+                // Add themes from character beliefs
+                Object.values(this.perspectives).forEach(character => {
+                    character.beliefs.forEach(belief => {
+                        if (belief.toLowerCase().includes("justice")) potential_themes.add("Justice and Injustice");
+                        if (belief.toLowerCase().includes("power")) potential_themes.add("Power Dynamics");
+                        if (belief.toLowerCase().includes("truth")) potential_themes.add("Truth and Perception");
+                        if (belief.toLowerCase().includes("family")) potential_themes.add("Family and Loyalty");
+                        if (belief.toLowerCase().includes("fate")) potential_themes.add("Fate and Free Will");
+                    });
+                });
+
+                if (potential_themes.size === 0) {
+                    return "Could not infer themes. Add more descriptive content to your core event and character beliefs.";
+                }
+
+                return "Potential Themes: " + Array.from(potential_themes).join(", ");
+            }
+
+            getOutline() {
+                let outline = "<h2>Story Outline</h2>";
+                outline += "<p>Here's how your story progresses through the six stages:</p>";
+                outline += "<div class='outline-stages'>";
+                
+                for (let i = 0; i < this.stages.length; i++) {
+                    outline += `<div class='outline-stage'>
+                        <h3>${i+1}. ${this.stages[i]}</h3>
+                        <p>${this.generateSceneIdea(i+1)}</p>
+                    </div>`;
+                }
+                
+                outline += "</div>";
+                return outline;
+            }
+        }
+
+        // Create AI instance
+        const ai = new EchoingNarrativeAI();
+
+        // DOM Elements
+        const coreEventInput = document.getElementById('coreEvent');
+        const saveCoreEventBtn = document.getElementById('saveCoreEvent');
+        const characterNameInput = document.getElementById('characterName');
+        const initialBeliefInput = document.getElementById('initialBelief');
+        const initialFeelingInput = document.getElementById('initialFeeling');
+        const addCharacterBtn = document.getElementById('addCharacter');
+        const selectCharacterDropdown = document.getElementById('selectCharacter');
+        const characterEventInput = document.getElementById('characterEvent');
+        const eventFeelingInput = document.getElementById('eventFeeling');
+        const beliefChangeInput = document.getElementById('beliefChange');
+        const addCharacterEventBtn = document.getElementById('addCharacterEvent');
+        const loopDescriptionInput = document.getElementById('loopDescription');
+        const loopCharactersSelect = document.getElementById('loopCharacters');
+        const addLoopBtn = document.getElementById('addLoop');
+        const themeInput = document.getElementById('themeInput');
+        const addThemeBtn = document.getElementById('addTheme');
+        const suggestThemesBtn = document.getElementById('suggestThemes');
+        const stageSelectDropdown = document.getElementById('stageSelect');
+        const generateSceneBtn = document.getElementById('generateScene');
+        const sceneIdeasContainer = document.getElementById('sceneIdeasContainer');
+        const storyOutlineContainer = document.getElementById('storyOutline');
+        const characterPerspectivesList = document.getElementById('characterPerspectivesList');
+        const themeConnectionsElement = document.getElementById('themeConnections');
+
+        // UI Elements
+        const stageIndicators = document.querySelectorAll('.stage');
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        // Event Listeners
+        saveCoreEventBtn.addEventListener('click', () => {
+            const event = coreEventInput.value.trim();
+            if (event) {
+                const result = ai.setCoreEvent(event);
+                alert(result);
+                updateUI();
+            } else {
+                alert("Please enter a core event description.");
+            }
+        });
+
+        addCharacterBtn.addEventListener('click', () => {
+            const name = characterNameInput.value.trim();
+            const belief = initialBeliefInput.value.trim();
+            const feeling = initialFeelingInput.value.trim();
+            
+            if (!name) {
+                alert("Please enter a character name.");
+                return;
+            }
+            
+            const result = ai.addPerspective(name, belief, feeling);
+            alert(result);
+            
+            // Clear inputs
+            characterNameInput.value = '';
+            initialBeliefInput.value = '';
+            initialFeelingInput.value = '';
+            
+            updateUI();
+        });
+
+        addCharacterEventBtn.addEventListener('click', () => {
+            const char = selectCharacterDropdown.value;
+            const event = characterEventInput.value.trim();
+            const feeling = eventFeelingInput.value.trim();
+            const beliefChange = beliefChangeInput.value.trim();
+            
+            if (!char) {
+                alert("Please select a character.");
+                return;
+            }
+            
+            if (!event) {
+                alert("Please describe an event.");
+                return;
+            }
+            
+            const result = ai.addEventToPerspective(char, event, feeling, beliefChange);
+            alert(result);
+            
+            // Clear inputs
+            characterEventInput.value = '';
+            eventFeelingInput.value = '';
+            beliefChangeInput.value = '';
+            
+            updateUI();
+        });
+
+        addLoopBtn.addEventListener('click', () => {
+            const description = loopDescriptionInput.value.trim();
+            const selectedCharacters = Array.from(loopCharactersSelect.selectedOptions)
+                .map(option => option.value)
+                .filter(value => value !== "");
+            
+            if (!description) {
+                alert("Please describe the nested loop.");
+                return;
+            }
+            
+            const result = ai.addNestedLoop(description, selectedCharacters);
+            alert(result);
+            
+            // Clear inputs
+            loopDescriptionInput.value = '';
+            loopCharactersSelect.selectedIndex = -1;
+            
+            updateUI();
+        });
+
+        addThemeBtn.addEventListener('click', () => {
+            const theme = themeInput.value.trim();
+            if (theme) {
+                const result = ai.addTheme(theme);
+                alert(result);
+                themeInput.value = '';
+                updateUI();
+            } else {
+                alert("Please enter a theme.");
+            }
+        });
+
+        suggestThemesBtn.addEventListener('click', () => {
+            const themes = ai.suggestThemes();
+            alert(themes);
+            updateUI();
+        });
+
+        generateSceneBtn.addEventListener('click', () => {
+            const stage = parseInt(stageSelectDropdown.value);
+            const idea = ai.generateSceneIdea(stage);
+            
+            if (sceneIdeasContainer.querySelector('.empty-state')) {
+                sceneIdeasContainer.innerHTML = '';
+            }
+            
+            const sceneCard = document.createElement('div');
+            sceneCard.className = 'scene-idea';
+            sceneCard.innerHTML = `
+                <h3>Stage ${stage}: ${ai.stages[stage-1]}</h3>
+                <p>${idea}</p>
+                <div class="theme-list">
+                    ${ai.themes.map(theme => `<span class="tag">${theme}</span>`).join('')}
+                </div>
+            `;
+            
+            sceneIdeasContainer.prepend(sceneCard);
+        });
+
+        // Tab switching
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === `${tab.dataset.tab}-tab`) {
+                        content.classList.add('active');
+                    }
+                });
+                
+                // Special cases
+                if (tab.dataset.tab === 'story') {
+                    storyOutlineContainer.innerHTML = ai.getOutline();
+                }
+                if (tab.dataset.tab === 'analysis') {
+                    updateCharacterPerspectives();
+                    updateThemeConnections();
+                }
+            });
+        });
+
+        // Stage indicator switching
+        stageIndicators.forEach(indicator => {
+            indicator.addEventListener('click', () => {
+                stageIndicators.forEach(i => i.classList.remove('active'));
+                indicator.classList.add('active');
+                
+                const stageNum = parseInt(indicator.dataset.stage) + 1;
+                stageSelectDropdown.value = stageNum;
+            });
+        });
+
+        // Helper functions
+        function updateUI() {
+            // Update character dropdowns
+            updateCharacterDropdowns();
+        }
+
+        function updateCharacterDropdowns() {
+            // Clear existing options (except first placeholder)
+            while (selectCharacterDropdown.options.length > 1) {
+                selectCharacterDropdown.remove(1);
+            }
+            
+            while (loopCharactersSelect.options.length > 1) {
+                loopCharactersSelect.remove(1);
+            }
+            
+            // Add current characters
+            const characters = Object.keys(ai.perspectives);
+            characters.forEach(char => {
+                const option1 = document.createElement('option');
+                option1.value = char;
+                option1.textContent = char;
+                selectCharacterDropdown.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = char;
+                option2.textContent = char;
+                loopCharactersSelect.appendChild(option2);
+            });
+        }
+
+        function updateCharacterPerspectives() {
+            const chars = Object.keys(ai.perspectives);
+            
+            if (chars.length === 0) {
+                characterPerspectivesList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <p>No character perspectives yet. Add characters to see their development.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            characterPerspectivesList.innerHTML = '<div class="character-list"></div>';
+            const characterList = characterPerspectivesList.querySelector('.character-list');
+            
+            chars.forEach(char => {
+                const pers = ai.perspectives[char];
+                const charCard = document.createElement('div');
+                charCard.className = 'character-card';
+                
+                let eventsList = '';
+                if (pers.events.length > 0) {
+                    eventsList = pers.events.map(event => `<li>${event}</li>`).join('');
+                    eventsList = `<ul>${eventsList}</ul>`;
+                } else {
+                    eventsList = "<p>No events added yet.</p>";
+                }
+                
+                charCard.innerHTML = `
+                    <div class="character-name">
+                        ${char}
+                        <span class="tooltip">
+                            <i class="fas fa-info-circle"></i>
+                            <span class="tooltiptext">Initial belief: ${pers.beliefs[0] || 'None'}</span>
+                        </span>
+                    </div>
+                    <div class="character-details">
+                        <h4>Timeline of Events:</h4>
+                        ${eventsList}
+                    </div>
+                `;
+                
+                characterList.appendChild(charCard);
+            });
+        }
+
+        function updateThemeConnections() {
+            if (ai.themes.length === 0 && !ai.core_event) {
+                themeConnectionsElement.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-link"></i>
+                        <p>No thematic analysis yet. Add themes to see connections.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            themeConnectionsElement.innerHTML = '';
+            
+            if (ai.themes.length > 0) {
+                const themesContainer = document.createElement('div');
+                themesContainer.innerHTML = `
+                    <h4>Your Themes:</h4>
+                    <div class="theme-list">
+                        ${ai.themes.map(theme => `<span class="tag">${theme}</span>`).join('')}
+                    </div>
+                `;
+                themeConnectionsElement.appendChild(themesContainer);
+            }
+            
+            if (ai.core_event) {
+                const coreContainer = document.createElement('div');
+                coreContainer.innerHTML = `
+                    <h4>Core Event Themes:</h4>
+                    <p>The following themes were identified in your core event:</p>
+                    <div class="theme-list">
+                        ${ai.suggestThemes().split(": ")[1].split(", ").map(theme => `<span class="tag">${theme}</span>`).join('')}
+                    </div>
+                `;
+                themeConnectionsElement.appendChild(coreContainer);
+            }
+        }
+
+        // Initial update
+        updateUI();
+    </script>
+</body>
+</html>
